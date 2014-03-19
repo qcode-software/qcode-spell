@@ -1,7 +1,8 @@
 NAME=qcode-spell
 PACKAGEDIR=qcode_spell
-VERSION=0.0.2
+VERSION=0.0.4
 RELEASE=0
+INSTALL_DIR=/usr/bin
 MAINTAINER=hackers@qcode.co.uk
 REMOTEUSER=debian.qcode.co.uk
 REMOTEHOST=debian.qcode.co.uk
@@ -18,14 +19,16 @@ export DESCRIPTION
 all: build package upload clean
 package: 
 	@echo "$$DESCRIPTION" > ./description-pak
-	fakeroot checkinstall -D --deldoc --backup=no --install=no --pkgname=$(NAME) --pkgversion=$(VERSION) --pkgrelease=$(RELEASE) -A all -y --maintainer $(MAINTAINER) --pkglicense="BSD" --reset-uids=yes --requires "tcl8.5,tcllib" --replaces none --conflicts none make install
+	fakeroot checkinstall -D --deldoc --backup=no --install=no --pkgname=$(NAME) --pkgversion=$(VERSION) --pkgrelease=$(RELEASE) -A all -y --maintainer $(MAINTAINER) --pkglicense="BSD" --reset-uids=yes --requires libc6 --replaces none --conflicts none make install
 
 build:
-	critcl -pkg ${NAME}.tcl
+	gcc -Wall -o ./qcode-spell ./spell.c
 
 install: 
-	mkdir -p /usr/lib/tcltk/$(PACKAGEDIR)${VERSION}
-	cp -R lib/${NAME}/* /usr/lib/tcltk/$(PACKAGEDIR)${VERSION}/
+	install ${NAME} ${INSTALL_DIR}
+
+uninstall: 
+	rm -f ${INSTALL_DIR}/${NAME}
 
 upload:
 	scp $(NAME)_$(VERSION)-$(RELEASE)_all.deb "$(REMOTEUSER)@$(REMOTEHOST):$(REMOTEDIR)/debs"	
@@ -33,7 +36,6 @@ upload:
 	ssh $(REMOTEUSER)@$(REMOTEHOST) reprepro -b $(REMOTEDIR) includedeb wheezy $(REMOTEDIR)/debs/$(NAME)_$(VERSION)-$(RELEASE)_all.deb
 
 clean:
+	rm -f ./$(NAME)
 	rm -f ./$(NAME)_$(VERSION)-$(RELEASE)_all.deb
-	rm -rf ./lib
-	rm -rf ./include
-	rm -rf ./description-pak
+	rm -f ./description-pak

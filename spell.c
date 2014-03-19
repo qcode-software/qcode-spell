@@ -1,7 +1,3 @@
- package provide qcode-spell 1.0
- package require critcl
- critcl::ccode {
-
 /* 
  * spell.c --- spell corrector
  * 
@@ -43,7 +39,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define DICTIONARY "/usr/share/dict/qcwords"
+#define DICTIONARY "/usr/share/dict/qcode_words"
 #define DICT_SZ    3000000
 
 const char delim[]    = ".,:;`/\"+-_(){}[]<>*&^%$#@!?~/|\\=1234567890 \t\n";
@@ -324,21 +320,19 @@ static char *correct(char *word)
         
         return res_word;
 }
-}
 
-critcl::cproc spell {char* check_word} char* {
+int main(int argc, char **argv)
+{
         char *corrected_word;
         ENTRY dict;
         
         hcreate(DICT_SZ);
         
         if (!read_file(dict))
-                return (char *)"-1";
+                return -1;
         
-        corrected_word = correct(check_word);
-        if (strcmp(corrected_word, check_word)) {
-                return (char *)corrected_word;
-        } else {
-                return ""; 
-        }
+        corrected_word = correct(argv[1]);
+        printf("%s", corrected_word);
+        
+        return 0;
 }
