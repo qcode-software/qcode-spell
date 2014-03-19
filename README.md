@@ -1,6 +1,6 @@
 qcode-spell
 ===========
-Implemtation of Peter Norvig's spell check. C version by Marcelo Toledo.
+Implementation of Peter Norvig's spell check. C version by Marcelo Toledo.
 
 Usage
 =====
