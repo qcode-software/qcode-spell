@@ -39,11 +39,12 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define DICTIONARY "/usr/share/dict/qcode_words"
 #define DICT_SZ    3000000
 
-const char delim[]    = ".,:;`/\"+-_(){}[]<>*&^%$#@!?~/|\\=1234567890 \t\n";
-const char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
+char *dictionary = "/usr/share/dict/qcode_words";
+
+const char delim[]    = ".,:;`/\"+-_(){}[]<>*&^%$#@!?~/|\\= \t\n";
+const char alphabet[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 
 static char *strtolower(char *word)
 {
@@ -78,13 +79,13 @@ static int update(char *word)
 static int read_file(ENTRY dict)
 {
         char *file, *word, *w;
-        FILE *fp = fopen(DICTIONARY, "r");
+        FILE *fp = fopen(dictionary, "r");
         struct stat sb;
         
         if (!fp)
                 return 0;
         
-        if (stat(DICTIONARY, &sb))
+        if (stat(dictionary, &sb))
                 return 0;
         
         file = malloc(sb.st_size);
@@ -325,13 +326,43 @@ int main(int argc, char **argv)
 {
         char *corrected_word;
         ENTRY dict;
-        
+
+        int c;
+        int errflg = 0;
+
+        while ((c = getopt(argc, argv, ":f:")) != -1) {
+            switch(c) {
+                case 'f':
+                    dictionary = optarg;
+                    break;
+                case ':':       /* -f without operand */
+                    printf("Option -%c requires an operand\n", optopt);
+                    errflg++;
+                    break;
+                case '?':
+                    printf("Unrecognized option: '-%c'\n", optopt);
+                    errflg++;
+            }
+        }
+        if (optind>=argc) {
+            printf("Requires a word to spell check.\n");
+            errflg++;
+        }
+        if (errflg) {
+            printf("Usage: qcode-spell -f dict_file word.\n");
+            exit(2);
+        }
+
+        if (access(dictionary,F_OK) == -1 ) {
+            printf("Cannot open file %s\n",dictionary);
+            exit(255);
+        }
         hcreate(DICT_SZ);
         
         if (!read_file(dict))
-                return -1;
+                exit(255);
         
-        corrected_word = correct(argv[1]);
+        corrected_word = correct(argv[optind]);
         printf("%s", corrected_word);
         
         return 0;
