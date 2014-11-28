@@ -372,13 +372,18 @@ int main(int argc, char **argv)
             input_word = (char *) malloc (nbytes + 1);
             bytes_read = getline(&input_word, &nbytes, stdin);
             if ( bytes_read == -1 ) {
+              // No input to read from stdin
+              free(input_word);
+              return 0;
+            } else {
+              corrected_word = correct(input_word);
+              free(input_word);
+              printf("%s", corrected_word);
               return 0;
             }
         } else {
-            input_word = input;
+          corrected_word = correct(input);
+          printf("%s", corrected_word);          
+          return 0;
         }
-        corrected_word = correct(input_word);
-        printf("%s", corrected_word);
-        
-        return 0;
 }
