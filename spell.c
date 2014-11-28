@@ -324,8 +324,11 @@ static char *correct(char *word)
 
 int main(int argc, char **argv)
 {
+        char *input;
+        char *input_word;
         char *corrected_word;
         ENTRY dict;
+        size_t nbytes = 100;
 
         int c;
         int errflg = 0;
@@ -362,7 +365,15 @@ int main(int argc, char **argv)
         if (!read_file(dict))
                 exit(255);
         
-        corrected_word = correct(argv[optind]);
+        input = argv[optind];
+        if ( strcmp(input, "-") == 0 ) {
+            // Read input word from stdin
+            input_word = (char *) malloc (nbytes + 1);
+            getline(&input_word, &nbytes, stdin);
+        } else {
+            input_word = input;
+        }
+        corrected_word = correct(input_word);
         printf("%s", corrected_word);
         
         return 0;
