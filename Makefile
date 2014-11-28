@@ -1,6 +1,6 @@
 NAME=qcode-spell
 PACKAGEDIR=qcode_spell
-VERSION=0.0.5
+VERSION=0.0.6
 RELEASE=0
 INSTALL_DIR=/usr/bin
 MAINTAINER=hackers@qcode.co.uk
