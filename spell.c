@@ -328,6 +328,7 @@ int main(int argc, char **argv)
         char *input_word;
         char *corrected_word;
         ENTRY dict;
+        int bytes_read;
         size_t nbytes = 100;
 
         int c;
@@ -369,7 +370,10 @@ int main(int argc, char **argv)
         if ( strcmp(input, "-") == 0 ) {
             // Read input word from stdin
             input_word = (char *) malloc (nbytes + 1);
-            getline(&input_word, &nbytes, stdin);
+            bytes_read = getline(&input_word, &nbytes, stdin);
+            if ( bytes_read == -1 ) {
+              return 0;
+            }
         } else {
             input_word = input;
         }
