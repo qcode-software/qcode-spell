@@ -374,16 +374,15 @@ int main(int argc, char **argv)
             if ( bytes_read == -1 ) {
               // No input to read from stdin
               free(input_word);
-              return 0;
+              corrected_word = correct("");
             } else {
               corrected_word = correct(input_word);
               free(input_word);
-              printf("%s", corrected_word);
-              return 0;
             }
         } else {
           corrected_word = correct(input);
-          printf("%s", corrected_word);          
-          return 0;
         }
+
+        printf("%s", corrected_word);
+        return 0;
 }
