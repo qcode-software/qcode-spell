@@ -269,8 +269,8 @@ static char *max(char **array, int rows)
         
         for (i = 0; i < rows; i++) {
                 e = find(array[i]);
-                if (e && ((int) e->data > max_size)) {
-                        max_size = (int) e->data;
+                if (e && ((intptr_t) e->data > max_size)) {
+                        max_size = (intptr_t) e->data;
                         max_word = e->key;
                 }
         }

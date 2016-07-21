@@ -1,7 +1,7 @@
 NAME=qcode-spell
 PACKAGEDIR=qcode_spell
 VERSION=0.0.6
-RELEASE=0
+RELEASE=1deb8
 INSTALL_DIR=/usr/bin
 MAINTAINER=hackers@qcode.co.uk
 REMOTEUSER=debian.qcode.co.uk
@@ -32,8 +32,7 @@ uninstall:
 
 upload:
 	scp $(NAME)_$(VERSION)-$(RELEASE)_all.deb "$(REMOTEUSER)@$(REMOTEHOST):$(REMOTEDIR)/debs"	
-	ssh $(REMOTEUSER)@$(REMOTEHOST) reprepro -b $(REMOTEDIR) includedeb squeeze $(REMOTEDIR)/debs/$(NAME)_$(VERSION)-$(RELEASE)_all.deb
-	ssh $(REMOTEUSER)@$(REMOTEHOST) reprepro -b $(REMOTEDIR) includedeb wheezy $(REMOTEDIR)/debs/$(NAME)_$(VERSION)-$(RELEASE)_all.deb
+	ssh $(REMOTEUSER)@$(REMOTEHOST) reprepro -b $(REMOTEDIR) includedeb jessie $(REMOTEDIR)/debs/$(NAME)_$(VERSION)-$(RELEASE)_all.deb
 
 clean:
 	rm -f ./$(NAME)
